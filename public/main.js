@@ -1,24 +1,25 @@
 
 
 window.onload = (event) => {
-	
+
+	// Basic setup
 	var parentElement = document.getElementById("container");
 	var childElement = document.getElementById("loader");
 	parentElement.removeChild(childElement);
-	const canvas = document.getElementById("canvas"); // Get the canvas element 
+	const canvas = document.getElementById("canvas"); // Get the canvas element
 	const engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
 
-	
+	// Tree generator function
 	QuickTreeGenerator = function(sizeBranch, sizeTrunk, radius, trunkMaterial, leafMaterial, scene) {
 
 	    var treeparent = BABYLON.Mesh.CreatePlane("treeparent", scene);
 	    treeparent.isVisible = false;
-	    
+
 	    var leaves = new BABYLON.Mesh("leaves", scene);
-	    
+
 	    //var vertexData = BABYLON.VertexData.CreateSphere(2,sizeBranch); //this line for BABYLONJS2.2 or earlier
 	    var vertexData = BABYLON.VertexData.CreateSphere({segments:2, diameter:sizeBranch}); //this line for BABYLONJS2.3 or later
-	    
+
 	    vertexData.applyToMesh(leaves, false);
 
 	    var positions = leaves.getVerticesData(BABYLON.VertexBuffer.PositionKind);
@@ -32,7 +33,7 @@ window.onload = (event) => {
 	    var max = [];
 
 	    for (var i=0; i<numberOfPoints; i++) {
-		    
+
 	        var p = new v3(positions[i*3], positions[i*3+1], positions[i*3+2]);
 
 	        if (p.y >= sizeBranch/2) {
@@ -48,14 +49,14 @@ window.onload = (event) => {
 	                found = true;
 	            }
 	        }
-		    
+
 	        if (!found) {
 	            var array = [];
 	            array.push(p, i*3);
 	            map.push(array);
 	        }
 	    }
-		
+
 	    var randomNumber = function (min, max) {
 	        if (min == max) {
 	            return (min);
@@ -77,10 +78,10 @@ window.onload = (event) => {
 	            positions[i+2] += rz;
 	        }
 	    });
-		
+
 
 	    leaves.setVerticesData(BABYLON.VertexBuffer.PositionKind, positions);
-		
+
 	    var normals = [];
 	    BABYLON.VertexData.ComputeNormals(positions, indices, normals);
 	    leaves.setVerticesData(BABYLON.VertexBuffer.NormalKind, normals);
@@ -89,26 +90,27 @@ window.onload = (event) => {
 	    leaves.position.y = sizeTrunk+sizeBranch/2-2;
 
 	    var trunk = BABYLON.Mesh.CreateCylinder("trunk", sizeTrunk, radius-2<1?1:radius-2, radius, 10, 2, scene );
-	    
+
 	    trunk.position.y = (sizeBranch/2+2)-sizeTrunk/2;
 	    trunk.material = trunkMaterial;
 	    trunk.convertToFlatShadedMesh();
-	    
+
 	    leaves.parent = treeparent;
 	    trunk.parent = treeparent;
 	    var mTree = BABYLON.Mesh.MergeMeshes([treeparent, trunk, leaves], true, true, undefined, false, true);
 
 	    return mTree;
-		
+
 	};
 
-	
+
 	let GAMEOVER = false;
 	let dispose = false;
-	
+
+	// Scene generator function
 	const createScene = function () {
-		
-	    // Create scene
+
+	  // Create scene
 		const scene = new BABYLON.Scene(engine);
 		// scene.debugLayer.show();
 		scene.autoClear = false;
@@ -124,33 +126,33 @@ window.onload = (event) => {
 		scene.fogDensity = 0.005;
 
 		//GUI
-	    const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("myUI");
+	  const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("myUI");
 
-	    // Camera
-	    const camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(220, 4, 270), scene);
-	    camera.setTarget(new BABYLON.Vector3(220, 4, 100));
-	    camera.angularSensibility = 3000;
-	    camera.attachControl(canvas, true);
-	    camera.keysUp = [87];
-	    camera.keysDown = [83];
-	    camera.keysLeft = [65];
-	    camera.keysRight = [68];
+    // Camera
+    const camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(220, 4, 270), scene);
+    camera.setTarget(new BABYLON.Vector3(220, 4, 100));
+    camera.angularSensibility = 3000;
+    camera.attachControl(canvas, true);
+    camera.keysUp = [87];
+    camera.keysDown = [83];
+    camera.keysLeft = [65];
+    camera.keysRight = [68];
 
-	    // Lights
-	    scene.ambientColor = new BABYLON.Color3(0.8, 0.8, 0.8);
-	    const light1 = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0.2, 1, 0), scene);
-	    light1.groundColor = new BABYLON.Color3(0, 0, 0);
-	    light1.diffuse = new BABYLON.Color3(0.9, 0.9, 0.9);
-	    light1.specular = new BABYLON.Color3(0.1, 0.1, 0.1);
-	    light1.intensity = 0.05;
-	    const light2 = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0.3, -1, 0.3), scene);
-	    light2.position = new BABYLON.Vector3(0, 60, 0);
-	    light2.diffuse = new BABYLON.Color3(1, 1, 1);
-	    light2.specular = new BABYLON.Color3(0.1, 0.1, 0.1);
-	    light2.intensity = 0.05;
-	    
-	    // Skybox
-	    const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, scene);
+    // Lights
+    scene.ambientColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+    const light1 = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0.2, 1, 0), scene);
+    light1.groundColor = new BABYLON.Color3(0, 0, 0);
+    light1.diffuse = new BABYLON.Color3(0.9, 0.9, 0.9);
+    light1.specular = new BABYLON.Color3(0.1, 0.1, 0.1);
+    light1.intensity = 0.05;
+    const light2 = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0.3, -1, 0.3), scene);
+    light2.position = new BABYLON.Vector3(0, 60, 0);
+    light2.diffuse = new BABYLON.Color3(1, 1, 1);
+    light2.specular = new BABYLON.Color3(0.1, 0.1, 0.1);
+    light2.intensity = 0.05;
+
+		// Skybox
+		const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, scene);
 		const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
 		skyboxMaterial.backFaceCulling = false;
 		skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/yellowcloud", scene);
@@ -159,24 +161,25 @@ window.onload = (event) => {
 		skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
 		skybox.material = skyboxMaterial;
 		// skybox.renderingGroupId = 0;
-		
-	    const scope = new BABYLON.GUI.Ellipse();
-	    scope.width = "20px"
-	    scope.height = "20px";
-	    scope.color = "White";
-	    scope.thickness = 2;
-	    scope.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-	    scope.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
-	    advancedTexture.addControl(scope);
 
-	    const scope2 = new BABYLON.GUI.Ellipse();
-	    scope2.width = "3px"
-	    scope2.height = "3px";
-	    scope2.color = "White";
-	    scope2.thickness = 2;
-	    scope2.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-	    scope2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
-	    advancedTexture.addControl(scope2);
+		// Scope variables
+		const scope = new BABYLON.GUI.Ellipse();
+		scope.width = "20px"
+		scope.height = "20px";
+		scope.color = "White";
+		scope.thickness = 2;
+		scope.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+		scope.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+		advancedTexture.addControl(scope);
+
+		const scope2 = new BABYLON.GUI.Ellipse();
+		scope2.width = "3px"
+		scope2.height = "3px";
+		scope2.color = "White";
+		scope2.thickness = 2;
+		scope2.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+		scope2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+		advancedTexture.addControl(scope2);
 
 		// const text1 = new BABYLON.GUI.TextBlock();
 		// text1.text = "Wraiths Left: " + ghostCount;
@@ -188,35 +191,36 @@ window.onload = (event) => {
 	    // text1.left = "20px";
 		// advancedTexture.addControl(text1);
 
+		// Text GUI setup
 		const text2 = new BABYLON.GUI.TextBlock();
 		text2.text = "Game Over";
-	    text2.color = "White";
-	    text2.fontSize = 64;
-	    text2.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    text2.color = "White";
+    text2.fontSize = 64;
+    text2.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
 		text2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
 		text2.isVisible = false;
 		advancedTexture.addControl(text2);
 
 		const text3 = new BABYLON.GUI.TextBlock();
 		text3.text = "To be Continued...";
-	    text3.color = "White";
-	    text3.fontSize = 64;
-	    text3.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    text3.color = "White";
+    text3.fontSize = 64;
+    text3.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
 		text3.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
 		text3.isVisible = false;
 		advancedTexture.addControl(text3);
 
 		const openingText = new BABYLON.GUI.TextBlock();
 		openingText.text = "Kill all the Wraiths\nBe aware of the Monster,\nit cannot be killed permanently\nAfter killing the Wraiths,\ngo to the bunker in the forest";
-	    openingText.color = "White";
-	    openingText.fontSize = 64;
-	    openingText.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    openingText.color = "White";
+    openingText.fontSize = 64;
+    openingText.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
 		openingText.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
 		openingText.isVisible = false;
 		advancedTexture.addControl(openingText);
 
 		//Map
-		
+
 		// let gameMap = new BABYLON.GUI.Rectangle();
 	 //    gameMap.width = "200px";
 	 //    gameMap.height = "200px";
@@ -245,31 +249,31 @@ window.onload = (event) => {
 		// 	mapPlayerPos.right = 100 + "px";
 		// }
 
-	    
+
 	    //Health Bar
 		let sheal = new BABYLON.GUI.Rectangle();
-	    sheal.width = 0.3;
-	    sheal.height = "30px";
-	    sheal.cornerRadius = 20;
-	    sheal.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-	    sheal.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-	    sheal.top = "20px";
-	    sheal.left = "20px";
-	    sheal.color = "green";
-	    sheal.thickness = 3;
-	    sheal.background = "green";
-	    advancedTexture.addControl(sheal);
+    sheal.width = 0.3;
+    sheal.height = "30px";
+    sheal.cornerRadius = 20;
+    sheal.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    sheal.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    sheal.top = "20px";
+    sheal.left = "20px";
+    sheal.color = "green";
+    sheal.thickness = 3;
+    sheal.background = "green";
+    advancedTexture.addControl(sheal);
 
-	    let playerHealth = 60;
-	    // sheal.linkWithMesh(camera);  
-	    // sheal.linkOffsetY = -80;
+    let playerHealth = 60;
+    // sheal.linkWithMesh(camera);
+    // sheal.linkOffsetY = -80;
 
-	    function updateHealth() {
-	    	sheal.width = playerHealth/200;
-	    	if(playerHealth < 0.005) {
-	    		playerHealth = 0;
-	    	}
-	    }
+    function updateHealth() {
+    	sheal.width = playerHealth/200;
+    	if(playerHealth < 0.005) {
+    		playerHealth = 0;
+    	}
+    }
 
 
 		const borderMesh = BABYLON.MeshBuilder.CreateBox("border0", {width:1, height:1, depth:1}, scene);
@@ -353,7 +357,7 @@ window.onload = (event) => {
 		warehouseBorder2.position = new BABYLON.Vector3(207, 0, 265);
 		warehouseBorder2.isVisible = false;
 		warehouseBorder2.freezeWorldMatrix();
-		
+
 		const warehouseBorder3 = BABYLON.MeshBuilder.CreateBox("border0", {width: 16, height: 20, depth: 2}, scene);
 		warehouseBorder3.position = new BABYLON.Vector3(225, 0, 250);
 		warehouseBorder3.isVisible = false;
@@ -389,7 +393,7 @@ window.onload = (event) => {
 		bunkerBorderDoor.isVisible = false;
 		bunkerBorderDoor.freezeWorldMatrix();
 
-	    
+
 		// Trees
 		const trunkMaterial = new BABYLON.StandardMaterial("trunkmaterial", scene);
 		trunkMaterial.diffuseColor = new BABYLON.Color3(0.5, 0, 0);
@@ -417,7 +421,7 @@ window.onload = (event) => {
 	    for(i = 1; i <= 200; i++) {
 	    	trees.push(randTree(i + ''));
 		}
-		
+
 		//Till here
 
 		// function randTree(n) {
@@ -430,7 +434,7 @@ window.onload = (event) => {
 		// 		});
 		// 	}
 		// }
-		
+
 		// randTree(50);
 
 
@@ -500,7 +504,7 @@ window.onload = (event) => {
 		const cityGroundC3 = createCityGround('14', -50, 0, 250);
 		const cityGroundC4 = createCityGround('15', 50, 0, 250);
 
-		
+
 
 		const garden = BABYLON.MeshBuilder.CreateDisc("garden", {radius: 45, tessellation: 64}, scene);
 		garden.material = forestGroundMaterial;
@@ -524,7 +528,7 @@ window.onload = (event) => {
 		creature.material = creatureMaterial;
 		let creatureHealth = 20;
 		let creatureDead = false;
-		
+
 
 		BABYLON.SceneLoader.ImportMesh("", "textures/mutant/", "scene.gltf", scene, function (mutant) {
 			mutant[0].scaling = new BABYLON.Vector3(0.06, 0.06, 0.06);
@@ -533,7 +537,7 @@ window.onload = (event) => {
 			creature.position = new BABYLON.Vector3(60, 0, 200);
 			scene.stopAllAnimations();
 			scene.getAnimationGroupByName("idle").play(true);
-		}); 
+		});
 
 
 
@@ -551,7 +555,7 @@ window.onload = (event) => {
 			targetVec = camera.position.clone();
 			lookAtVec = targetVec;
 			lookAtVec.y = 0;
-			
+
 			initVec = creature.position.clone();
 			distVec = BABYLON.Vector3.Distance(targetVec, initVec);
 
@@ -591,13 +595,13 @@ window.onload = (event) => {
 	    let safeDistGhost = 70;
 		let minDistGhost = 5;
 		let ghc = 0;
-		
+
 
 		function ghostUpdate() {
 			ghosts.forEach(ghost => {
 				targetVecGhost = camera.position.clone();
 				// targetVecGhost.y = 0;
-				
+
 				initVecGhost = ghost.position.clone();
 				distVecGhost = BABYLON.Vector3.Distance(targetVecGhost, initVecGhost);
 
@@ -692,7 +696,7 @@ window.onload = (event) => {
 	    	newBuilding.freezeWorldMatrix();
 		});
 
-		
+
 		BABYLON.SceneLoader.ImportMesh("", "textures/building3/", "scene.gltf", scene, function (building) {
 			building[0].rotation = new BABYLON.Vector3(0, Math.PI/2, 0);
 		    building[0].scaling = new BABYLON.Vector3(0.03, 0.03, 0.03);
@@ -773,7 +777,7 @@ window.onload = (event) => {
 	    	fountain1.freezeWorldMatrix();
 		});
 
-		
+
 
 		BABYLON.SceneLoader.ImportMesh("", "textures/bench/", "scene.gltf", scene, function (bench) {
 			bench[0].scaling = new BABYLON.Vector3(4, 4, 4);
@@ -793,9 +797,9 @@ window.onload = (event) => {
 	    // 	bench[0].position = new BABYLON.Vector3(280, 2, 100);
 		// });
 
-		
 
-		
+
+
 		const fences = [];
 
 		function createFence(fenceMesh, x, y, z) {
@@ -838,12 +842,12 @@ window.onload = (event) => {
 		fenceBorder2.position = new BABYLON.Vector3(100, 0, 10);
 		fenceBorder2.isVisible = false;
 		const fenceBorder3 = BABYLON.MeshBuilder.CreateBox("fenceB", {width: 2, height: 30, depth: 10}, scene);
-		fenceBorder3.position = new BABYLON.Vector3(100, 0, -95);		
+		fenceBorder3.position = new BABYLON.Vector3(100, 0, -95);
 		fenceBorder3.isVisible = false;
 
 
 
-		
+
 
 		BABYLON.SceneLoader.ImportMesh("", "textures/wall/", "scene.gltf", scene, function (wall) {
 			const wall1 = wall[0];
@@ -896,8 +900,8 @@ window.onload = (event) => {
 		const road14 = createRoad("11", -80, 0.01, 192.5, 10, 185);
 
 		// Sounds
-		
-		
+
+
 		const gunshot = new BABYLON.Sound("gunshot", "sounds/Gun_Shot.mp3", scene);
 		const stepsSound = new BABYLON.Sound("stepsound", "sounds/Steps_Sound.mp3", scene);
 		const metalSound = new BABYLON.Sound("metal", "sounds/metal.wav", scene);
@@ -921,13 +925,13 @@ window.onload = (event) => {
 		camera.ellipsoidOffset = new BABYLON.Vector3(0, 4, 0);
 		camera.speed = 0.8;
 
-		
+
 
 		// Gravity
 		scene.gravity = new BABYLON.Vector3(0, -9.81, 0);
 		camera.applyGravity = true;
 		creature.applyGravity = true;
-		
+
 		//Collisions
 		scene.collisionsEnabled = true;
 		camera.checkCollisions = true;
@@ -966,7 +970,7 @@ window.onload = (event) => {
 		tankborder.checkCollisions = true;
 		fenceBorder1.checkCollisions = true;
 		fenceBorder2.checkCollisions = true;
-		fenceBorder3.checkCollisions = true; 
+		fenceBorder3.checkCollisions = true;
 		warehouseBorder.checkCollisions = true;
 		warehouseBorder5.checkCollisions = true;
 		warehouseBorder2.checkCollisions = true;
@@ -974,10 +978,10 @@ window.onload = (event) => {
 		warehouseBorder4.checkCollisions = true;
 		creature.checkCollisions = true;
 
-		
 
 
-		
+
+
 		//Controls...Mouse
 	    //We start without being locked.
 		let isLocked = false;
@@ -985,13 +989,13 @@ window.onload = (event) => {
 		 let viewportwidth;
 		 let viewportheight;
 		 // the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
-		  
+
 		 if (typeof window.innerWidth != 'undefined')
 		 {
 		      viewportwidth = window.innerWidth,
 		      viewportheight = window.innerHeight
 		 }
-		  
+
 		// IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
 		 else if (typeof document.documentElement != 'undefined'
 		     && typeof document.documentElement.clientWidth !=
@@ -1001,7 +1005,7 @@ window.onload = (event) => {
 		       viewportheight = document.documentElement.clientHeight
 		 }
 		 // older versions of IE
-		  
+
 		 else
 		 {
 		       viewportwidth = document.getElementsByTagName('body')[0].clientWidth,
@@ -1009,7 +1013,7 @@ window.onload = (event) => {
 		 }
 
 
-		 function shoot() {       
+		 function shoot() {
 		 	if(HASGUN) {
 		 		const ray = camera.getForwardRay(80);
 	            const pickResult = scene.pickWithRay(ray);
@@ -1036,7 +1040,7 @@ window.onload = (event) => {
 						pickResult.pickedMesh.isDead = true;
 					}
 				}
-	    
+
 	            //  if(pickResult.pickedMesh.name == "box") {
 				// 	if(pickResult.pickedMesh.health > 0) {
 				// 		pickResult.pickedMesh.health -= 0.2;
@@ -1071,7 +1075,7 @@ window.onload = (event) => {
 	 //            gunshot.play();
 		// 	}
 		// }
-		
+
 		// On click event, request pointer lock
 		scene.onPointerDown = function (evt) {
 			//true/false check if we're locked, faster than checking pointerlock on each single click.
@@ -1091,12 +1095,12 @@ window.onload = (event) => {
 				canvas.removeEventListener("keypress", Walk);
 			}
 		};
-		
+
 
 		// Event listener when the pointerlock is updated (or removed by pressing ESC for example).
 		const pointerlockchange = function () {
 			const controlEnabled = document.mozPointerLockElement || document.webkitPointerLockElement || document.msPointerLockElement || document.pointerLockElement || null;
-			
+
 			// If the user is already locked
 			if (!controlEnabled) {
 				// camera.detachControl(canvas);
@@ -1107,7 +1111,7 @@ window.onload = (event) => {
 				isLocked = true;
 			}
 		};
-		
+
 		// Attach events to the document
 		document.addEventListener("pointerlockchange", pointerlockchange, false);
 		document.addEventListener("mspointerlockchange", pointerlockchange, false);
@@ -1115,7 +1119,7 @@ window.onload = (event) => {
 		document.addEventListener("webkitpointerlockchange", pointerlockchange, false);
 
 
-		
+
 
 	 	let dt = 0;
 
@@ -1136,7 +1140,7 @@ window.onload = (event) => {
 	 	//Animation
 
 	 	const gunRecoil = new BABYLON.Animation("recoil", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-	 	var keysG = []; 
+	 	var keysG = [];
 
 		  keysG.push({
 		    frame: 0,
@@ -1158,7 +1162,7 @@ window.onload = (event) => {
 		  gun.animations.push(gunRecoil);
 
 	 	const fallAnimation = new BABYLON.Animation("fall", "position.y", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-	 	var keys = []; 
+	 	var keys = [];
 
 		  keys.push({
 		    frame: 0,
@@ -1213,7 +1217,7 @@ window.onload = (event) => {
 	 			GAMEOVER = true;
 	 		}
 		 }
-		 
+
 		 const dialogue = new BABYLON.Sound("background", "sounds/Dialogue.mp3", scene, null, { loop: false, autoplay: true });
 
 		 if(!dialogue.isPlaying) {
@@ -1229,12 +1233,12 @@ window.onload = (event) => {
 		// 	 }
 	 	// }
 
-		
+
 		 let sceneRemove = 0;
 
 
 		scene.registerBeforeRender(function() {
-			
+
 			 if(!GAMEOVER) {
 		     	if(!dialogue.isPlaying) {
 					PAUSE = false;
@@ -1250,7 +1254,7 @@ window.onload = (event) => {
 				 }
 			 }
 
-			 
+
 
 		     if(!PAUSE) {
 		     	canvas.addEventListener("keypress", Walk);
@@ -1291,7 +1295,7 @@ window.onload = (event) => {
 	    });
 
 
-		
+
 
 	    return scene;
 	};
@@ -1314,7 +1318,7 @@ window.onload = (event) => {
 
 
 	// Watch for browser/canvas resize events
-	window.addEventListener("resize", function () { 
+	window.addEventListener("resize", function () {
 	        engine.resize();
 	});
 
