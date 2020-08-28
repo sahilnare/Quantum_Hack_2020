@@ -277,74 +277,74 @@ window.onload = (event) => {
 
 
 		const borderMesh = BABYLON.MeshBuilder.CreateBox("border0", {width:1, height:1, depth:1}, scene);
-	    borderMesh.isVisible = false;
+    borderMesh.isVisible = false;
 
-	    const border0 = borderMesh.createInstance("border0");
-	    border0.scaling = new BABYLON.Vector3(10, 30, 400);
-	    border0.position = new BABYLON.Vector3(-105, 0, 100);
-	    border0.isVisible = false;
-	    border0.freezeWorldMatrix();
+    const border0 = borderMesh.createInstance("border0");
+    border0.scaling = new BABYLON.Vector3(10, 30, 400);
+    border0.position = new BABYLON.Vector3(-105, 0, 100);
+    border0.isVisible = false;
+    border0.freezeWorldMatrix();
 
-	    const border1 = borderMesh.createInstance("border1");
-	    border1.scaling = new BABYLON.Vector3(400, 30, 10);
-	    border1.position = new BABYLON.Vector3(100, 0, -105);
-	    border1.isVisible = false;
-	    border1.freezeWorldMatrix();
+    const border1 = borderMesh.createInstance("border1");
+    border1.scaling = new BABYLON.Vector3(400, 30, 10);
+    border1.position = new BABYLON.Vector3(100, 0, -105);
+    border1.isVisible = false;
+    border1.freezeWorldMatrix();
 
-	    const border2 = borderMesh.createInstance("border2");
-	    border2.scaling = new BABYLON.Vector3(10, 30, 400);
-	    border2.position = new BABYLON.Vector3(305, 0, 100);
-	    border2.isVisible = false;
-	    border2.freezeWorldMatrix();
+    const border2 = borderMesh.createInstance("border2");
+    border2.scaling = new BABYLON.Vector3(10, 30, 400);
+    border2.position = new BABYLON.Vector3(305, 0, 100);
+    border2.isVisible = false;
+    border2.freezeWorldMatrix();
 
-	    const border3 = borderMesh.createInstance("border3");
-	    border3.scaling = new BABYLON.Vector3(400, 30, 10);
-	    border3.position = new BABYLON.Vector3(100, 0, 305);
+    const border3 = borderMesh.createInstance("border3");
+    border3.scaling = new BABYLON.Vector3(400, 30, 10);
+    border3.position = new BABYLON.Vector3(100, 0, 305);
 		border3.isVisible = false;
 		border3.freezeWorldMatrix();
 
 		const buildingborder1 = BABYLON.MeshBuilder.CreateBox("borderbuilding", {width:34, height:60, depth:70}, scene);
-	    buildingborder1.position = new BABYLON.Vector3(142, 30, -31);
+    buildingborder1.position = new BABYLON.Vector3(142, 30, -31);
 		buildingborder1.isVisible = false;
 		buildingborder1.freezeWorldMatrix();
 
 		const buildingborder2 = BABYLON.MeshBuilder.CreateBox("borderbuilding", {width:40, height:40, depth:42}, scene);
-	    buildingborder2.position = new BABYLON.Vector3(149, 20, 51);
+    buildingborder2.position = new BABYLON.Vector3(149, 20, 51);
 		buildingborder2.isVisible = false;
 		buildingborder2.freezeWorldMatrix();
 
 		const buildingborder3 = buildingborder2.createInstance("borderbuilding");
-	    buildingborder3.position = new BABYLON.Vector3(149, 20, 106);
+    buildingborder3.position = new BABYLON.Vector3(149, 20, 106);
 		buildingborder3.isVisible = false;
 		buildingborder3.freezeWorldMatrix();
 
 		const buildingborder4 = BABYLON.MeshBuilder.CreateBox("border0", {width:72, height:30, depth:25}, scene);
-	    buildingborder4.position = new BABYLON.Vector3(80, 0, 142);
+    buildingborder4.position = new BABYLON.Vector3(80, 0, 142);
 		buildingborder4.isVisible = false;
 		buildingborder4.freezeWorldMatrix();
 
 		const buildingborder5 = BABYLON.MeshBuilder.CreateBox("border0", {width:47, height:50, depth:34}, scene);
-	    buildingborder5.position = new BABYLON.Vector3(0, 0, 131);
+    buildingborder5.position = new BABYLON.Vector3(0, 0, 131);
 		buildingborder5.isVisible = false;
 		buildingborder5.freezeWorldMatrix();
 
 		const fountainborder1 = BABYLON.MeshBuilder.CreateBox("borderfountain", {width:33, height:50, depth:34}, scene);
-	    fountainborder1.position = new BABYLON.Vector3(220, 0, 81);
+    fountainborder1.position = new BABYLON.Vector3(220, 0, 81);
 		fountainborder1.isVisible = false;
 		fountainborder1.freezeWorldMatrix();
 
 		const carsborder1 = BABYLON.MeshBuilder.CreateBox("border0", {width:20, height:30, depth:28}, scene);
-	    carsborder1.position = new BABYLON.Vector3(132, 0, 195);
+    carsborder1.position = new BABYLON.Vector3(132, 0, 195);
 		carsborder1.isVisible = false;
 		carsborder1.freezeWorldMatrix();
 
 		const carborder1 = BABYLON.MeshBuilder.CreateBox("border0", {width:23, height:30, depth:12}, scene);
-	    carborder1.position = new BABYLON.Vector3(42, 0, 185);
+    carborder1.position = new BABYLON.Vector3(42, 0, 185);
 		carborder1.isVisible = false;
 		carborder1.freezeWorldMatrix();
 
 		const tankborder = BABYLON.MeshBuilder.CreateBox("border0", {width:30, height:10, depth:58}, scene);
-	    tankborder.position = new BABYLON.Vector3(0, 0, 210);
+    tankborder.position = new BABYLON.Vector3(0, 0, 210);
 		tankborder.isVisible = false;
 		tankborder.freezeWorldMatrix();
 
