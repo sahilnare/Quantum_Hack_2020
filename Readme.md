@@ -1,6 +1,6 @@
  # The Knight of Apocalypse
  
-## The Knight of Apocalypse is a web-based First Person Shooter (FPS) game. Currently it is a single player game. You have to kill all the enemies to unlock the door of bunker to qualify for next mission.
+## The Knight of Apocalypse is a web-based First Person Shooter (FPS) game. Currently it is a single player game. You have to kill all the enemies to unlock the door of bunker inside forest to qualify for next mission.
 
 Gameplay: https://www.youtube.com/watch?v=uC9sji5_lIg
 
